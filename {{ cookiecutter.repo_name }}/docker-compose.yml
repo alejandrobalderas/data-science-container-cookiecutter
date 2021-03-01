@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    image: { { cookiecutter.repo_name } }
+    image: { { cookiecutter.project_name } }
     build: .
     volumes:
       - .:/app
@@ -9,7 +9,7 @@ services:
   jupyter:
     depends_on:
       - app
-    image: { { cookiecutter.repo_name } }
+    image: { { cookiecutter.project_name } }
     ports:
       - "8080:8080"
     command:
