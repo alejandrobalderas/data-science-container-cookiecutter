@@ -1,6 +1,5 @@
 FROM python:3.8-slim
 
-ENV PIPENV_VENV_IN_PROJECT=0
 ENV PIPENV_SKIP_LOCK=1
 
 RUN apt update && apt install -y \
