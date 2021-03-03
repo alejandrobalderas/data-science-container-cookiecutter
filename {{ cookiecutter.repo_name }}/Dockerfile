@@ -1,23 +1,35 @@
 FROM python:3.8-slim
 
-RUN echo 'export PS1="🐳 \[\033[1;36m\][\u@docker] \[\033[1;34m\]\W\[\033[0;35m\] # \[\033[0m\]"' >> /root/.bashrc
-
 ENV PIPENV_VENV_IN_PROJECT=1
 ENV PIPENV_SKIP_LOCK=1
 
-RUN apt update && apt upgrade -y && \
-    apt install -y pipenv python3-pip
+RUN apt update && apt install -y \
+    sudo \
+    pipenv \
+    python3-pip \
+    && pip3 install virtualenv
 
-RUN pip3 install virtualenv
+ARG USERNAME=dev
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN adduser ${USERNAME} --gecos "" --disabled-password &&\
+    echo ${USERNAME} ALL=\(ALL\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} &&\
+    chmod 0440 /etc/sudoers.d/${USERNAME}
+
+USER ${USERNAME}
+
+RUN echo 'export PS1="🐳 \[\033[1;36m\][\u@docker] \[\033[1;34m\]\W\[\033[0;35m\] # \[\033[0m\]"' >> /home/${USERNAME}/.bashrc
 
 WORKDIR /app
+RUN sudo chown -R ${USERNAME} .
 
-COPY Pipfile setup.py ./
-COPY src/__init__.py src/
+COPY --chown=${USERNAME} Pipfile setup.py ./
+COPY --chown=${USERNAME} src/__init__.py src/
 
 RUN pipenv install --skip-lock
 
-COPY . .
+COPY --chown=${USERNAME} . .
 
 CMD ["pipenv", "run", "python", "main.py"]
 
