@@ -1,13 +1,10 @@
 FROM python:3.8-slim
 
-ENV PIPENV_VENV_IN_PROJECT=1
+ENV PIPENV_VENV_IN_PROJECT=0
 ENV PIPENV_SKIP_LOCK=1
 
 RUN apt update && apt install -y \
-    sudo \
-    pipenv \
-    python3-pip \
-    && pip3 install virtualenv
+    sudo 
 
 ARG USERNAME=dev
 ARG USER_UID=1000
@@ -27,7 +24,7 @@ RUN sudo chown -R ${USERNAME} .
 COPY --chown=${USERNAME} Pipfile setup.py ./
 COPY --chown=${USERNAME} src/__init__.py src/
 
-RUN pipenv install --skip-lock
+RUN pipenv install
 
 COPY --chown=${USERNAME} . .
 
