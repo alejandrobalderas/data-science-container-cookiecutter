@@ -6,6 +6,8 @@ ENV PIPENV_SKIP_LOCK=1
 RUN apt update && apt install -y \
     sudo 
 
+RUN pip3 install pipenv
+
 ARG USERNAME=dev
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
