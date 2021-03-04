@@ -22,14 +22,8 @@ WORKDIR /app
 
 # It copies all the files that do not change often. Speeds up rebuild process.
 # The flag --chown copies the file directly as the wanted user
-COPY --chown=${USERNAME} Pipfile setup.py ./
-COPY --chown=${USERNAME} src/__init__.py src/
-
-# Install all the dependencies
-RUN pipenv install
-
-# Copy the rest of the files and directories
-COPY --chown=${USERNAME} . .
+COPY --chown=${USERNAME} ../Pipfile ../setup.py ./
+COPY --chown=${USERNAME} ../src/__init__.py src/
 
 # Recursively change permisions in folder in case there are files
 # that still belong to root
@@ -37,5 +31,12 @@ RUN sudo chown -R ${USERNAME} .
 
 # Switches to the user
 USER ${USERNAME}
+
+# Install all the dependencies
+RUN pipenv install
+
+# Copy the rest of the files and directories
+COPY --chown=${USERNAME} .. .
+
 # Makes out a nice prompt in case you have to go inside of the container for any reason
 RUN echo 'export PS1="🐳 \[\033[1;36m\][\u@docker] \[\033[1;34m\]\W\[\033[0;35m\] # \[\033[0m\]"' >> ~/.bashrc
