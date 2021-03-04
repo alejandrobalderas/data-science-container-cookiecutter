@@ -22,10 +22,10 @@ data: requirements
 	pipenv run src/data/make_dataset.py data/raw data/processed
 
 bash:
-	docker-compose -f docker/docker-compose.yml run app bash
+	docker-compose run app bash
 
 jupyter:
-	docker-compose -f docker/docker-compose.yml up -d jupyter
+	docker-compose up -d jupyter
 
 jupyter-log: jupyter
 	docker logs $(BASE_CONTAINER)_jupyter
