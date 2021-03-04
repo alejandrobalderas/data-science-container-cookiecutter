@@ -27,10 +27,10 @@ build:
 bash:
 	docker-compose run app bash
 
-jupyter:
+jupyter-run:
 	docker-compose up -d jupyter
 
-jupyter-log: jupyter
+jupyter: jupyter-run
 	docker logs $(BASE_CONTAINER)_jupyter
 
 ## Delete all compiled Python files
