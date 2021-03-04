@@ -6,7 +6,7 @@
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PROJECT_NAME = {{ cookiecutter.repo_name }}
-# PYTHON_INTERPRETER = 
+BASE_CONTAINER = {{cookiecutter.repo_name}}
 
 
 #################################################################################
@@ -15,11 +15,20 @@ PROJECT_NAME = {{ cookiecutter.repo_name }}
 
 ## Install Python Dependencies
 requirements: 
-	$pipenv install
+	pipenv install
 
 ## Make Dataset
 data: requirements
-	$pipenv run src/data/make_dataset.py data/raw data/processed
+	pipenv run src/data/make_dataset.py data/raw data/processed
+
+bash:
+	docker-compose -f docker/docker-compose.yml run app bash
+
+jupyter:
+	docker-compose -f docker/docker-compose.yml up -d jupyter
+
+jupyter-log: jupyter
+	docker logs $(BASE_CONTAINER)_jupyter
 
 ## Delete all compiled Python files
 clean:
