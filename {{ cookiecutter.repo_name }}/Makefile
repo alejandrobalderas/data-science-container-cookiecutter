@@ -21,6 +21,9 @@ requirements:
 data: requirements
 	pipenv run src/data/make_dataset.py data/raw data/processed
 
+build:
+	docker-compose up --build base	
+
 bash:
 	docker-compose run app bash
 
